@@ -1,0 +1,5 @@
+C:/JavaRushTasks> git init
+                 > git add .
+                 > git commit -m "Уровень пройден"
+                 > git remote add origin https://github.com/whiskels/JavaRush
+                 > git push -u origin master
