@@ -3,6 +3,7 @@
 #############
 target/
 .idea/
+*.jrtc
 
 /5.OnlineInternship/
 /out/
@@ -12,4 +13,3 @@ target/
 /out.log.*
 /8.Games\lib
 
-*.jrtc
