@@ -12,8 +12,7 @@ public class Solution {
     public static void main(String[] args) {
         //исправьте outputStream/inputStream в соответствии с путем к вашему реальному файлу
         try {
-            // File your_file_name = File.createTempFile("your_file_name", null);
-            String your_file_name = "C:\\Users\\kuzmi\\Desktop\\1.txt";
+            File your_file_name = File.createTempFile("your_file_name", null);
             OutputStream outputStream = new FileOutputStream(your_file_name);
             InputStream inputStream = new FileInputStream(your_file_name);
 
@@ -68,12 +67,44 @@ public class Solution {
         }
 
         public void save(OutputStream outputStream) throws Exception {
-            outputStream.write(Integer.parseInt(name));
-            //implement this method - реализуйте этот метод
+            PrintWriter writer = new PrintWriter(outputStream);
+            String isName = this.name != null ? "yes" : "no";
+            String isAsset = this.assets.size() > 0 ? "yes" : "no";
+
+            writer.println(isName);
+            writer.println(isAsset);
+
+            if (isName.equals("yes")) {
+                writer.println(this.name);
+            }
+
+            if (isAsset.equals("yes")) {
+                for(Asset a : assets) {
+                    writer.println(a.getName());
+                    writer.println(a.getPrice());
+                }
+            }
+            writer.flush();
+            writer.close();
         }
 
         public void load(InputStream inputStream) throws Exception {
-            //implement this method - реализуйте этот метод
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            String isNamePresent = reader.readLine();
+            String isAssetPresent = reader.readLine();
+
+            if (isNamePresent.equals("yes")) {
+                this.name = reader.readLine();
+            }
+
+            if (isAssetPresent.equals("yes")) {
+                while (reader.ready()) {
+                    Asset asset =  new Asset(reader.readLine(), Double.parseDouble(reader.readLine()));
+                    this.assets.add(asset);
+                }
+            }
+
+            reader.close();
         }
     }
 }

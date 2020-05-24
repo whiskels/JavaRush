@@ -33,12 +33,63 @@ public class Snake extends GameObject {
         }
     }
 
-    public void setDirection(Direction direction) {
-        this.direction = direction;
+    public boolean checkCollision(GameObject object) {
+        boolean isCollision = false;
+        for (GameObject snakePart : snakeParts) {
+            if (snakePart.x == object.x && snakePart.y == object.y) {
+                isCollision = true;
+            }
+        }
+        return isCollision;
     }
 
-    public void move() {
+    public void setDirection(Direction direction) {
+            boolean oppositeDirection = false;
+            boolean badDirection = false;
+            if (((direction.equals(Direction.LEFT) || direction.equals(Direction.RIGHT)) && snakeParts.get(0).x != snakeParts.get(1).x)
+        || ((direction.equals(Direction.DOWN) || direction.equals(Direction.UP)) && snakeParts.get(0).y != snakeParts.get(1).y)) {
+            badDirection = true;
+            }
+        switch (direction) {
+            case UP:
+                oppositeDirection = this.direction.equals(Direction.DOWN);
+                break;
+            case DOWN:
+                oppositeDirection = this.direction.equals(Direction.UP);
+                break;
+            case LEFT:
+                oppositeDirection = this.direction.equals(Direction.RIGHT);
+                break;
+            case RIGHT:
+                oppositeDirection = this.direction.equals(Direction.LEFT);
+                break;
+        }
+        if (!oppositeDirection && !badDirection) {
+                this.direction = direction;
+            }
+    }
 
+    public void move(Apple apple) {
+        GameObject newHead = createNewHead();
+        if (newHead.x < 0 || newHead.x > SnakeGame.WIDTH - 1 || newHead.y < 0 || newHead.y > SnakeGame.HEIGHT - 1 ) {
+            isAlive = false;
+            return;
+        }
+        if (checkCollision(newHead)) {
+            isAlive = false;
+            return;
+        }
+        snakeParts.add(0,newHead);
+        if (snakeParts.get(0).x == apple.x && snakeParts.get(0).y == apple.y){
+        apple.isAlive = false;
+        }
+        else {
+            removeTail();
+        }
+    }
+
+    public int getLength() {
+        return snakeParts.size();
     }
 
     public GameObject createNewHead() {
