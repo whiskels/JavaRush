@@ -4,6 +4,10 @@ import java.util.Arrays;
 
 public class Solution {
 
+    public static void main(String[] args) {
+
+    }
+
     public static boolean comp(int[] a, int[] b) {
         System.out.println(b.length);
         if (a.length == 0 || b.length == 0) {
