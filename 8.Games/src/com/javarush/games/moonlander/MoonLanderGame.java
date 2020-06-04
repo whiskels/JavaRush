@@ -1,8 +1,8 @@
 package com.javarush.games.moonlander;
 
 import com.javarush.engine.cell.*;
+import com.javarush.engine.cell.Game;
 import com.javarush.engine.cell.Color;
-
 
 import java.awt.*;
 
@@ -12,24 +12,23 @@ public class MoonLanderGame extends Game {
     private Rocket rocket;
     private GameObject landscape, platform;
     private boolean isGameStopped, isUpPressed, isLeftPressed, isRightPressed;
+    private int score;
 
     @Override
     public void initialize() {
-        showGrid(false);
         setScreenSize(WIDTH,HEIGHT);
+        showGrid(false);
         createGame();
     }
-
 
     private void drawScene() {
         for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < HEIGHT; j++) {
-                setCellColor(i,j, Color.ORANGE);
+                setCellColor(i,j,Color.ORANGE);
             }
         }
         rocket.draw(this);
         landscape.draw(this);
-        platform.draw(this);
     }
 
     private void createGame() {
@@ -38,6 +37,7 @@ public class MoonLanderGame extends Game {
         isRightPressed = false;
         isUpPressed = false;
         isGameStopped = false;
+        score = 1000;
         setTurnTimer(50);
         drawScene();
     }
@@ -45,7 +45,11 @@ public class MoonLanderGame extends Game {
     @Override
     public void onTurn(int step) {
         rocket.move(isUpPressed,isLeftPressed,isRightPressed);
+        if (score > 0) {
+            score--;
+        }
         check();
+        setScore(score);
         drawScene();
     }
 
@@ -117,10 +121,10 @@ public class MoonLanderGame extends Game {
 
     private void gameOver() {
         rocket.crash();
+        score = 0;
         isGameStopped = true;
         showMessageDialog(Color.RED, "YOU LOSE", Color.WHITE, 24);
         stopTurnTimer();
-
     }
 
 
