@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /* 
 Очень странные дела
@@ -42,21 +43,16 @@ public class Solution {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) return false;
-            if (o == null || getClass() != o.getClass()) return false;
-
+            if (this == o) return true;
+            if (!(o instanceof Human)) return false;
             Human human = (Human) o;
-
-            if (name == null ? !name.equals(human.name) : human.name != null) return false;
-            return assets != null ? assets.equals(human.assets) : human.assets == null;
-
+            return name.equals(human.name) &&
+                    assets.equals(human.assets);
         }
 
         @Override
         public int hashCode() {
-            int result = name != null ? name.hashCode() : 0;
-            result = 31 * result + (assets != null ? assets.hashCode() : 0);
-            return (int) (Math.random() * 100);
+            return Objects.hash(name, assets);
         }
 
         public Human() {
