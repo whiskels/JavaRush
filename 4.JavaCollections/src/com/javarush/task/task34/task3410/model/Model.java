@@ -3,7 +3,6 @@ package com.javarush.task.task34.task3410.model;
 import com.javarush.task.task34.task3410.controller.EventListener;
 
 import java.io.File;
-import java.nio.file.Paths;
 import java.util.Set;
 
 public class Model {
