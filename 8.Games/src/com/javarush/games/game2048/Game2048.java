@@ -5,6 +5,8 @@ import com.javarush.engine.cell.*;
 public class Game2048 extends Game {
     private static final int SIDE = 4;
     private int[][] gameField = new int[SIDE][SIDE];
+    private boolean isGameStopped = false;
+    private int score;
 
     @Override
     public void initialize() {
@@ -14,11 +16,15 @@ public class Game2048 extends Game {
     }
 
     private void createGame() {
+        gameField = new int[SIDE][SIDE];
+        score = 0;
+        setScore(score);
         createNewNumber();
         createNewNumber();
     }
 
     private void drawScene() {
+        setScore(score);
         for (int i = 0; i < SIDE; i++) {
             for (int j = 0; j < SIDE; j++) {
                 setCellColoredNumber(i,j,gameField[j][i]);
@@ -27,6 +33,9 @@ public class Game2048 extends Game {
     }
 
     private void createNewNumber() {
+        if (getMaxTileValue() == 2048) {
+            win();
+        }
         int x = getRandomNumber(SIDE);
         int y = getRandomNumber(SIDE);
         if (gameField[y][x] == 0) {
@@ -98,6 +107,8 @@ public class Game2048 extends Game {
         for (int i = 0; i < row.length-1 ; i++) {
             if (row[i] == row[i+1] && row[i] !=0) {
                 row[i] = row[i]*2;
+                score+=row[i];
+                setScore(score);
                 row[i+1] = 0;
                 i++;
                 isMerged = true;
@@ -108,24 +119,43 @@ public class Game2048 extends Game {
 
     @Override
     public void onKeyPress(Key key) {
-        switch(key) {
-            case LEFT:
-                moveLeft();
-                break;
-            case RIGHT:
-                moveRight();
-                break;
-            case DOWN:
-                moveDown();
-                break;
-            case UP:
-                moveUp();
-                break;
+        if (!isGameStopped) {
+            if (!canUserMove()) {
+                gameOver();
+                return;
+            }
+            switch(key) {
+                case LEFT:
+                    moveLeft();
+                    drawScene();
+                    break;
+                case RIGHT:
+                    moveRight();
+                    drawScene();
+                    break;
+                case DOWN:
+                    moveDown();
+                    drawScene();
+                    break;
+                case UP:
+                    moveUp();
+                    drawScene();
+                    break;
+            }
+        } else if (key.equals(Key.SPACE)) {
+            isGameStopped = false;
+            createGame();
+            drawScene();
         }
     }
 
-    private void moveUp() {
 
+    private void moveUp() {
+        rotateClockwise();
+        rotateClockwise();
+        rotateClockwise();
+        moveLeft();
+        rotateClockwise();
     }
 
     private void moveLeft() {
@@ -141,15 +171,22 @@ public class Game2048 extends Game {
         if (isAdditionalPointNeeded) {
             createNewNumber();
         }
-        drawScene();
     }
 
     private void  moveRight() {
-
+        rotateClockwise();
+        rotateClockwise();
+        moveLeft();
+        rotateClockwise();
+        rotateClockwise();
     }
 
     private void moveDown() {
-
+        rotateClockwise();
+        moveLeft();
+        rotateClockwise();
+        rotateClockwise();
+        rotateClockwise();
     }
 
     private void rotateClockwise() {
@@ -161,5 +198,50 @@ public class Game2048 extends Game {
             }
         }
         gameField = buffer;
+    }
+
+    private int getMaxTileValue() {
+        int max = 0;
+        for (int i = 0; i < SIDE; i++) {
+            for (int j = 0; j < SIDE; j++) {
+                if (gameField[i][j] > max) {
+                    max = gameField[i][j];
+                }
+            }
+        }
+        return max;
+    }
+
+    private void win() {
+        isGameStopped = true;
+        showMessageDialog(Color.GREEN, "YOU WIN", Color.WHITE, 24);
+    }
+
+    private void gameOver() {
+        isGameStopped = true;
+        showMessageDialog(Color.RED, "YOU LOSE", Color.WHITE, 24);
+
+    }
+
+    private boolean canUserMove() {
+        for (int i = 0; i < SIDE; i++) {
+            for (int j = 0; j < SIDE; j++) {
+                if (gameField[i][j] == 0) {
+                    return true;
+                }
+                if (hasEqualNeighbor(j,i)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean hasEqualNeighbor(int x, int y) {
+        if (x+1 < SIDE && gameField[y][x] == gameField[y][x+1]) return true;
+        if (x-1 >= 0 && gameField[y][x] == gameField[y][x-1]) return true;
+        if (y+1 < SIDE && gameField[y][x] == gameField[y+1][x]) return true;
+        if (y-1 >= 0 && gameField[y][x] == gameField[y-1][x]) return true;
+        return false;
     }
 }

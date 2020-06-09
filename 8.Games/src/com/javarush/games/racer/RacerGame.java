@@ -37,6 +37,7 @@ public class RacerGame extends Game {
     private void moveAll() {
         player.move();
         roadMarking.move(player.speed);
+        roadManager.move(player.speed);
     }
 
     @Override
@@ -70,6 +71,7 @@ public class RacerGame extends Game {
     @Override
     public void onTurn(int time) {
         moveAll();
+        roadManager.generateNewRoadObjects(this);
         drawScene();
     }
 
