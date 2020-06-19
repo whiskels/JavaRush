@@ -31,7 +31,18 @@ public class PlayerCar extends GameObject {
                 break;
         }
 
-        if (x < RoadManager.LEFT_BORDER) x = RoadManager.LEFT_BORDER;
-        else if (x > RoadManager.RIGHT_BORDER) x = RoadManager.RIGHT_BORDER;
+        if (x < RoadManager.LEFT_BORDER) {
+            x = RoadManager.LEFT_BORDER;
+        } else if (x > RoadManager.RIGHT_BORDER) {
+            x = RoadManager.RIGHT_BORDER;
+        }
+    }
+
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
+
+    public void stop() {
+        matrix = ShapeMatrix.PLAYER_DEAD;
     }
 }
