@@ -2,9 +2,11 @@ package com.javarush.task.task26.task2613;
 
 import sun.reflect.generics.tree.Tree;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 public class CurrencyManipulatorFactory {
     private static Map<String, CurrencyManipulator> map = new HashMap<>();
@@ -27,6 +29,10 @@ public class CurrencyManipulatorFactory {
         } else {
             return map.get(key);
         }
+    }
+
+    public static Collection<CurrencyManipulator> getAllCurrencyManipulators() {
+        return map.values();
     }
 
 }
