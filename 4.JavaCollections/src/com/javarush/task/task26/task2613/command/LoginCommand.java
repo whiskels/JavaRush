@@ -8,12 +8,15 @@ import java.util.ResourceBundle;
 
 public class LoginCommand implements Command {
     private ResourceBundle validCreditCards =
-            ResourceBundle.getBundle(CashMachine.class.getPackage().getName() +".resources.verifiedCards");
+            ResourceBundle.getBundle(CashMachine.RESOURCE_PATH + "verifiedCards");
+    private ResourceBundle res =
+            ResourceBundle.getBundle(CashMachine.RESOURCE_PATH + "login_en");
 
 
     @Override
     public void execute() throws InterruptOperationException {
-        ConsoleHelper.writeMessage("Please enter card number and PIN");
+        ConsoleHelper.writeMessage(res.getString("before"));
+        ConsoleHelper.writeMessage(res.getString("specify.data"));
 
         while (true) {
             try {
@@ -24,13 +27,15 @@ public class LoginCommand implements Command {
                 }
 
                 if (validCreditCards.containsKey(cardString) && validCreditCards.getString(cardString).equals(pinString)) {
-                    ConsoleHelper.writeMessage("Authorization is successful!");
+                    ConsoleHelper.writeMessage(res.getString("success.format"));
                     break;
                 }
+                ConsoleHelper.writeMessage(res.getString("not.verified.format"));
                 throw new IllegalArgumentException();
 
             } catch (IllegalArgumentException e) {
-                ConsoleHelper.writeMessage("Invalid input, please try again.");
+                ConsoleHelper.writeMessage(res.getString("try.again.with.details"));
+                ConsoleHelper.writeMessage(res.getString("try.again.or.exit"));
             }
 
         }

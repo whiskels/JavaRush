@@ -1,5 +1,6 @@
 package com.javarush.task.task26.task2613.command;
 
+import com.javarush.task.task26.task2613.CashMachine;
 import com.javarush.task.task26.task2613.ConsoleHelper;
 import com.javarush.task.task26.task2613.CurrencyManipulator;
 import com.javarush.task.task26.task2613.CurrencyManipulatorFactory;
@@ -7,18 +8,21 @@ import com.javarush.task.task26.task2613.exception.InterruptOperationException;
 import com.javarush.task.task26.task2613.exception.NotEnoughMoneyException;
 
 import java.util.Map;
+import java.util.ResourceBundle;
 
 class WithdrawCommand implements Command {
+    private ResourceBundle res =
+            ResourceBundle.getBundle(CashMachine.RESOURCE_PATH + "withdraw_en");
 
     @Override
     public void execute() throws InterruptOperationException {
+        ConsoleHelper.writeMessage(res.getString("before"));
         final String currency = ConsoleHelper.askCurrencyCode();
         final CurrencyManipulator cm = CurrencyManipulatorFactory.getManipulatorByCurrencyCode(currency);
         boolean isWithdrawSuccess = false;
+        ConsoleHelper.writeMessage(res.getString("specify.amount"));
         do {
             try {
-                ConsoleHelper.writeMessage("Input amount:");
-
                 String input;
                 int amount;
                 while (true) {
@@ -30,7 +34,7 @@ class WithdrawCommand implements Command {
                         }
                         break;
                     } catch (Exception e) {
-                        ConsoleHelper.writeMessage("Error, Try again:");
+                        ConsoleHelper.writeMessage(res.getString("specify.not.empty.amount"));
                         continue;
                     }
                 }
@@ -41,13 +45,13 @@ class WithdrawCommand implements Command {
 
                 final Map<Integer, Integer> withdraw = cm.withdrawAmount(amount);
                 for (Map.Entry<Integer, Integer> entry : withdraw.entrySet()) {
-                    System.out.println(String.format("\t%d - %d", entry.getKey(), entry.getValue()));
+                    System.out.println(String.format(res.getString("success.format"), entry.getKey(), entry.getValue()));
                 }
 
                 isWithdrawSuccess = true;
-                ConsoleHelper.writeMessage("Withdrawal successful");
             } catch (NotEnoughMoneyException e) {
-                ConsoleHelper.writeMessage("Not enough money, try again");
+                ConsoleHelper.writeMessage(res.getString("not.enough.money"));
+
             }
         } while (!isWithdrawSuccess);
     }
