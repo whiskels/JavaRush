@@ -12,9 +12,11 @@ public class Solution {
     public static synchronized void moveMoney(Account from, Account to, int amount) {
         int transactionNumber = RANDOM.nextInt(5000);
 
+        Thread.yield();
         System.out.printf("Транзакция №%d: списание $%d со счета №%d. Баланс: %d.%n", transactionNumber, amount, from.getNumber(), from.getBalance());
         from.setBalance(from.getBalance() - amount);
 
+        Thread.yield();
         System.out.printf("Транзакция №%d: зачисление $%d на счет №%d. Баланс: %d.%n", transactionNumber, amount, to.getNumber(), to.getBalance());
         to.setBalance(to.getBalance() + amount);
     }
