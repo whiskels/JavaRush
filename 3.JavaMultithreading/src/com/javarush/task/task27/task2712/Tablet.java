@@ -26,6 +26,7 @@ public class Tablet extends Observable {
         Order order = null;
         try {
             order = new Order(this);
+            ConsoleHelper.writeMessage(order.toString());
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Console is unavailable.");
         } finally {
