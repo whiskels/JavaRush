@@ -20,7 +20,7 @@ public class Solution {
         }
 
         for (Runnable r : executor.shutdownNow()) {
-            System.out.println();
+            System.out.println(r.toString() + " was not completed");
         };
     }
 
